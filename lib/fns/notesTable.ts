@@ -3,7 +3,9 @@ import { Entity, Table } from 'dynamodb-onetable';
 import Dynamo from 'dynamodb-onetable/Dynamo';
 
 const client = new Dynamo({ client: new DynamoDBClient({}) });
-
+/**
+ * Generated this with Dynobase - https://dynobase.dev/
+ */
 const schema = {
   indexes: {
     primary: {

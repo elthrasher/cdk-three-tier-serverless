@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { NoteType } from '../fns/notesTable';
 import { getNotes, saveNote } from './utils';
 
+// Best practice would be to break this component down and maybe do a bit more with state management.
 const App = () => {
   const [body, setBody] = useState('');
   const [notes, setNotes] = useState([]);

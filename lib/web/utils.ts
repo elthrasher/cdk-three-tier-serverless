@@ -2,6 +2,11 @@ import { NoteType } from '../fns/notesTable';
 
 let url = '';
 
+/**
+ * The config.json file will be generated the first time the API is deployed for use in local development.
+ * When the UI is deployed, a custom resource will supply the config.json file.
+ * @returns the url as a string
+ */
 const getUrl = async () => {
   if (url) {
     return url;

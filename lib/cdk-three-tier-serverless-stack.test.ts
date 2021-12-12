@@ -16,6 +16,12 @@ describe('Stack test', () => {
       Parameters: expect.any(Object),
       Resources: {},
     };
+
+    /**
+     * Exact matches on the code artifacts product lots of churn.
+     * Doing this produces more stable tests as the expense of some accuracy.
+     * Prefer this over continually updating snapshots.
+     */
     Object.keys(resources).forEach((res) => {
       switch (resources[res].Type) {
         case 'AWS::Lambda::Function':
@@ -36,5 +42,6 @@ describe('Stack test', () => {
       }
     });
     expect(cfn).toMatchSnapshot(matchObject);
+    // Optionally add additional assertions to count resources, etc.
   });
 });

@@ -38,6 +38,7 @@ export class CdkThreeTierServerlessStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
+    // Demo-quality props. For production, you want a different removalPolicy and possibly a different billingMode.
     const table = new Table(this, 'NotesTable', {
       billingMode: BillingMode.PAY_PER_REQUEST,
       partitionKey: { name: 'pk', type: AttributeType.STRING },
@@ -46,6 +47,7 @@ export class CdkThreeTierServerlessStack extends Stack {
       tableName: 'NotesTable',
     });
 
+    // Functions could have memory tuned to save $$, but should be pretty cheap in any case.
     const readFunction = new NodejsFunction(this, 'ReadNotesFn', {
       architecture: Architecture.ARM_64,
       entry: `${__dirname}/fns/readFunction.ts`,
@@ -62,6 +64,8 @@ export class CdkThreeTierServerlessStack extends Stack {
 
     table.grantWriteData(writeFunction);
 
+    // API could be improved with authorization and models to validate payloads.
+    // In production, you will want access logging.
     const api = new HttpApi(this, 'NotesApi', {
       corsPreflight: {
         allowHeaders: ['Content-Type'],
@@ -92,18 +96,21 @@ export class CdkThreeTierServerlessStack extends Stack {
       path: '/notes',
     });
 
+    // Storage for assets only. NOT an S3 website.
     const websiteBucket = new Bucket(this, 'WebsiteBucket', {
       autoDeleteObjects: true,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
+    // Grant read access to the distribution.
     const originAccessIdentity = new OriginAccessIdentity(
       this,
       'OriginAccessIdentity'
     );
     websiteBucket.grantRead(originAccessIdentity);
 
+    // Cloudfront distribution with SPA config and https upgrade.
     const distribution = new Distribution(this, 'Distribution', {
       defaultBehavior: {
         origin: new S3Origin(websiteBucket, { originAccessIdentity }),
@@ -123,6 +130,8 @@ export class CdkThreeTierServerlessStack extends Stack {
       stdio: ['ignore', process.stderr, 'inherit'],
     };
 
+    // Run vite build to transpile React application, then copy to cdk.out.
+    // Docker build can't be omitted, even though we don't use it.
     const bundle = Source.asset(join(__dirname, 'web'), {
       bundling: {
         command: [
@@ -149,6 +158,8 @@ export class CdkThreeTierServerlessStack extends Stack {
       },
     });
 
+    // Need to set prune to false or the config.json file will be pruned.
+    // If deployments are frequent, should look into a way to clean up old files.
     new BucketDeployment(this, 'DeployWebsite', {
       destinationBucket: websiteBucket,
       distribution,
@@ -157,6 +168,7 @@ export class CdkThreeTierServerlessStack extends Stack {
       sources: [bundle],
     });
 
+    // Generate a config.json file and place in S3 so the web app can grab the API URL.
     new AwsCustomResource(this, 'ApiUrlResource', {
       logRetention: RetentionDays.ONE_DAY,
       onUpdate: {
