@@ -18,21 +18,21 @@ import {
 } from 'aws-cdk-lib/aws-cloudfront';
 import { S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { AttributeType, BillingMode, Table } from 'aws-cdk-lib/aws-dynamodb';
+import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Architecture } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { BlockPublicAccess, Bucket } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
-import { execSync, ExecSyncOptions } from 'child_process';
-import { Construct } from 'constructs';
-import { join } from 'path';
-import { copySync } from 'fs-extra';
 import {
   AwsCustomResource,
   AwsCustomResourcePolicy,
   PhysicalResourceId,
 } from 'aws-cdk-lib/custom-resources';
-import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { execSync, ExecSyncOptions } from 'child_process';
+import { Construct } from 'constructs';
+import { copySync } from 'fs-extra';
+import { join } from 'path';
 
 export class CdkThreeTierServerlessStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -152,11 +152,13 @@ export class CdkThreeTierServerlessStack extends Stack {
     new BucketDeployment(this, 'DeployWebsite', {
       destinationBucket: websiteBucket,
       distribution,
+      logRetention: RetentionDays.ONE_DAY,
       prune: false,
       sources: [bundle],
     });
 
     new AwsCustomResource(this, 'ApiUrlResource', {
+      logRetention: RetentionDays.ONE_DAY,
       onUpdate: {
         action: 'putObject',
         parameters: {
