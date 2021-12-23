@@ -6,6 +6,7 @@
   },
   "scripts": {
     "deploy": "cdk deploy --outputs-file config.json",
+    "start": "npm run deploy && vite",
     "test": "jest"
   },
   "devDependencies": {

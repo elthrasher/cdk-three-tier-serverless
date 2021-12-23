@@ -2,7 +2,7 @@ import { Notes } from './notesTable';
 import { handler } from './readFunction';
 
 const note = {
-  pk: 'ABC123',
+  pk: 'note',
   sk: new Date().toISOString(),
   date: new Date().toISOString(),
   note: `Don't forget things!`,

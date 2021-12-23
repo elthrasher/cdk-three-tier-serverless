@@ -8,9 +8,11 @@ const App = () => {
   const [body, setBody] = useState('');
   const [notes, setNotes] = useState([]);
   const [subject, setSubject] = useState('');
+
   useEffect(() => {
     getNotes().then((n) => setNotes(n));
   }, []);
+
   const clickHandler = async () => {
     if (body && subject) {
       setBody('');
@@ -25,6 +27,7 @@ const App = () => {
       setNotes(n);
     }
   };
+
   return (
     <div>
       <div>
@@ -58,7 +61,7 @@ const App = () => {
           </thead>
           <tbody>
             {notes.map((note: NoteType) => (
-              <tr key={note.pk}>
+              <tr key={note.date}>
                 <td>{note.subject}</td>
                 <td>{note.note}</td>
                 <td>{new Date(note.date).toLocaleString()}</td>
