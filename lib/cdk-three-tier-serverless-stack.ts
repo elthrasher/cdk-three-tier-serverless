@@ -74,22 +74,22 @@ export class CdkThreeTierServerlessStack extends Stack {
       },
     });
 
+    // Creates the Cfn AWS::ApiGatewayV2::Integration resources
     const readIntegration = new HttpLambdaIntegration(
       'ReadIntegration',
       readFunction
     );
-
     const writeIntegration = new HttpLambdaIntegration(
       'WriteIntegration',
       writeFunction
     );
 
+    // Creates the Cfn AWS::ApiGatewayV2::Route resources, assigning a path to an integration
     api.addRoutes({
       integration: readIntegration,
       methods: [HttpMethod.GET],
       path: '/notes',
     });
-
     api.addRoutes({
       integration: writeIntegration,
       methods: [HttpMethod.POST],
