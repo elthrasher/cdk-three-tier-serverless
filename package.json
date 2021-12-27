@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.88",
+    "@types/aws-lambda": "^8.10.89",
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
@@ -24,15 +24,15 @@
     "ts-jest": "^26.2.0",
     "ts-node": "^9.0.0",
     "typescript": "~3.9.7",
-    "vite": "^2.7.6"
+    "vite": "^2.7.7"
   },
   "dependencies": {
     "@aws-cdk/aws-apigatewayv2-alpha": "^2.3.0-alpha.0",
     "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.3.0-alpha.0",
-    "@aws-sdk/client-dynamodb": "^3.44.0",
+    "@aws-sdk/client-dynamodb": "^3.45.0",
     "aws-cdk-lib": "2.3.0",
-    "constructs": "^10.0.13",
-    "dynamodb-onetable": "^2.2.0",
+    "constructs": "^10.0.15",
+    "dynamodb-onetable": "2.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "source-map-support": "^0.5.16"
